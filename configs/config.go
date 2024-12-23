@@ -10,7 +10,7 @@ import (
 // Config holds the credentials to establish a connection with the db
 type Config struct {
 	DbName   string `env:"DBNAME,required"`
-	User     string `env:"USER,required"`
+	User     string `env:"DBUSER,required"`
 	Password string `env:"PASSWORD,required"`
 	Host     string `env:"HOST,required"`
 	Port     string `env:"PORT,required"`
