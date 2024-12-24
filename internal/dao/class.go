@@ -17,8 +17,12 @@ func NewClassDAO(db *sql.DB) *ClassDAO {
 
 // Selects * from class, if there is an error when running the query it returns the error
 func (dao *ClassDAO) GetClasses() ([]model.Class, error) {
-	query := `SELECT ccode, cname, cid, cred, cdesc, csyllabus, term, years 
-              FROM public.class;`
+	query := `
+	SELECT 
+		ccode, cname, cid, cred, cdesc, csyllabus, term, years 
+	FROM 
+		public.class;
+			  `
 
 	rows, err := dao.Db.Query(query)
 	if err != nil {
@@ -43,7 +47,8 @@ func (dao *ClassDAO) GetClasses() ([]model.Class, error) {
 
 func (dao *ClassDAO) GetClassByID(id uint64) (*model.Class, error) {
 	query := `
-	SELECT ccode, cname, cid, cred, cdesc, csyllabus, term, years 
+	SELECT 
+		ccode, cname, cid, cred, cdesc, csyllabus, term, years 
 	FROM 
 		public.class 
 	WHERE 
@@ -72,11 +77,14 @@ func (dao *ClassDAO) GetClassByID(id uint64) (*model.Class, error) {
 
 // Creates a class record, modifies the newClass param in memory
 func (dao *ClassDAO) CreateClass(newClass *model.Class) error {
-	query := `INSERT INTO public.class 
-				(ccode, cdesc, cname, cred, csyllabus, term, years)
-            VALUES ($1, $2, $3, $4, $5, $6, $7)
-			RETURNING ccode, cname, cid, cred, cdesc, csyllabus, term, years;
-			`
+	query := `
+	INSERT INTO public.class 
+		(ccode, cdesc, cname, cred, csyllabus, term, years)
+	VALUES 
+		($1, $2, $3, $4, $5, $6, $7)
+	RETURNING 
+		ccode, cname, cid, cred, cdesc, csyllabus, term, years;
+	`
 
 	err := dao.Db.QueryRow(query,
 		newClass.Ccode,
@@ -115,8 +123,10 @@ func (dao *ClassDAO) UpdateClass(updatedClass *model.Class, id uint64) error {
 		csyllabus = $5, 
 		term = $6, 
 		years = $7
-	WHERE cid = $8
-	RETURNING ccode, cname, cid, cred, cdesc, csyllabus, term, years;
+	WHERE 
+		cid = $8
+	RETURNING 
+		ccode, cname, cid, cred, cdesc, csyllabus, term, years;
 	`
 
 	err := dao.Db.QueryRow(query,
@@ -149,9 +159,12 @@ func (dao *ClassDAO) UpdateClass(updatedClass *model.Class, id uint64) error {
 // Deletes the class with param id, returns the deleted record
 func (dao *ClassDAO) DeleteClass(id uint64) (model.Class, error) {
 	query := `
-	DELETE FROM public.class
-	WHERE cid = $1
-	RETURNING ccode, cname, cid, cred, cdesc, csyllabus, term, years;
+	DELETE FROM 
+		public.class
+	WHERE 
+		cid = $1
+	RETURNING 
+		ccode, cname, cid, cred, cdesc, csyllabus, term, years;
 	`
 	var deletedClass model.Class
 	fmt.Println(id)
