@@ -18,14 +18,14 @@ type Config struct {
 
 // Loads the env and returns a db configuration
 func LoadConfig() (*Config, error) {
-	err := godotenv.Load(".env")
-	if err != nil {
+	//load env variables
+	if err := godotenv.Load(".env"); err != nil {
 		log.Fatalf("Error loading .env: %s", err)
 	}
 
+	// Parse the env variable to a config struct
 	cfg := &Config{}
-	err = env.Parse(cfg)
-	if err != nil {
+	if err := env.Parse(cfg); err != nil {
 		log.Fatalf("Error parsing env to Config struct: %s", err)
 		return nil, err
 	}

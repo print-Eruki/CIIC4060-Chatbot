@@ -20,8 +20,12 @@ func main() {
 
 	classDAO := dao.NewClassDAO(db)
 	classHandler := handler.NewClassHandler(classDAO)
-	
+
 	router.GET("/datastic_4/class", classHandler.GetClasses)
+	router.GET("/datastic_4/class/:id", classHandler.GetClassByID)
+	router.POST("/datastic_4/class", classHandler.CreateClass)
+	router.PUT("/datastic_4/class/:id", classHandler.UpdateClass)
+	router.DELETE("datastic_4/class/:id", classHandler.DeleteClass)
 
 	router.Run("localhost:8080")
 }
