@@ -22,7 +22,7 @@ func (dao *ClassDAO) GetClasses() ([]model.Class, error) {
 		ccode, cname, cid, cred, cdesc, csyllabus, term, years 
 	FROM 
 		public.class;
-			  `
+	`
 
 	rows, err := dao.Db.Query(query)
 	if err != nil {
@@ -105,10 +105,7 @@ func (dao *ClassDAO) CreateClass(newClass *model.Class) error {
 		&newClass.Years,
 	)
 
-	if err != nil {
-		return err
-	}
-	return nil
+	return err
 }
 
 // Updates the class with param id and modifies the updatedClass in memory
@@ -149,11 +146,7 @@ func (dao *ClassDAO) UpdateClass(updatedClass *model.Class, id uint64) error {
 		&updatedClass.Years,
 	)
 
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return err
 }
 
 // Deletes the class with param id, returns the deleted record
@@ -168,9 +161,7 @@ func (dao *ClassDAO) DeleteClass(id uint64) (model.Class, error) {
 	`
 	var deletedClass model.Class
 	fmt.Println(id)
-	err := dao.Db.QueryRow(query,
-		id,
-	).Scan(
+	err := dao.Db.QueryRow(query, id).Scan(
 		&deletedClass.Ccode,
 		&deletedClass.Cname,
 		&deletedClass.Cid,

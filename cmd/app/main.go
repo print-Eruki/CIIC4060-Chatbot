@@ -18,6 +18,14 @@ func main() {
 	//cleans incoming request urls, /entity/ -> /entity
 	router.RemoveExtraSlash = true
 
+	mapClassRoutes(db, router)
+	mapMeetingRoutes(db, router)
+
+	router.Run("localhost:8080")
+}
+
+// Maps the CRUD classes to their respective routes
+func mapClassRoutes(db *sql.DB, router *gin.Engine) {
 	classDAO := dao.NewClassDAO(db)
 	classHandler := handler.NewClassHandler(classDAO)
 
@@ -26,8 +34,17 @@ func main() {
 	router.POST("/datastic_4/class", classHandler.CreateClass)
 	router.PUT("/datastic_4/class/:id", classHandler.UpdateClass)
 	router.DELETE("datastic_4/class/:id", classHandler.DeleteClass)
+}
 
-	router.Run("localhost:8080")
+func mapMeetingRoutes(db *sql.DB, router *gin.Engine) {
+	meetingDAO := dao.NewMeetingDAO(db)
+	meetingHandler := handler.NewMeetingHandler(meetingDAO)
+
+	router.GET("/datastic_4/meeting", meetingHandler.GetMeetings)
+	router.GET("/datastic_4/meeting/:id", meetingHandler.GetMeetingByID)
+	router.POST("/datastic_4/meeting", meetingHandler.CreateMeeting)
+	router.PUT("/datastic_4/meeting/:id", meetingHandler.UpdateMeeting)
+	router.DELETE("datastic_4/meeting/:id", meetingHandler.DeleteMeeting)
 }
 
 // Establishes a connection to a postgres database
