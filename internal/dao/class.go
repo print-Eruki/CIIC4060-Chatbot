@@ -8,14 +8,13 @@ import (
 )
 
 type ClassDAO struct {
-	Db *sql.DB
+	DB *sql.DB
 }
 
 func NewClassDAO(db *sql.DB) *ClassDAO {
-	return &ClassDAO{Db: db}
+	return &ClassDAO{DB: db}
 }
 
-// Selects * from class, if there is an error when running the query it returns the error
 func (dao *ClassDAO) GetClasses() ([]model.Class, error) {
 	query := `
 	SELECT 
@@ -24,7 +23,7 @@ func (dao *ClassDAO) GetClasses() ([]model.Class, error) {
 		public.class;
 	`
 
-	rows, err := dao.Db.Query(query)
+	rows, err := dao.DB.Query(query)
 	if err != nil {
 		//return a nil and the error, let the handler take care of it
 		return nil, err
@@ -57,7 +56,7 @@ func (dao *ClassDAO) GetClassByID(id uint64) (*model.Class, error) {
 
 	var class model.Class
 
-	err := dao.Db.QueryRow(query, id).Scan(
+	err := dao.DB.QueryRow(query, id).Scan(
 		&class.Ccode,
 		&class.Cname,
 		&class.Cid,
@@ -86,7 +85,7 @@ func (dao *ClassDAO) CreateClass(newClass *model.Class) error {
 		ccode, cname, cid, cred, cdesc, csyllabus, term, years;
 	`
 
-	err := dao.Db.QueryRow(query,
+	err := dao.DB.QueryRow(query,
 		newClass.Ccode,
 		newClass.Cdesc,
 		newClass.Cname,
@@ -126,7 +125,7 @@ func (dao *ClassDAO) UpdateClass(updatedClass *model.Class, id uint64) error {
 		ccode, cname, cid, cred, cdesc, csyllabus, term, years;
 	`
 
-	err := dao.Db.QueryRow(query,
+	err := dao.DB.QueryRow(query,
 		updatedClass.Ccode,
 		updatedClass.Cdesc,
 		updatedClass.Cname,
@@ -161,7 +160,7 @@ func (dao *ClassDAO) DeleteClass(id uint64) (model.Class, error) {
 	`
 	var deletedClass model.Class
 	fmt.Println(id)
-	err := dao.Db.QueryRow(query, id).Scan(
+	err := dao.DB.QueryRow(query, id).Scan(
 		&deletedClass.Ccode,
 		&deletedClass.Cname,
 		&deletedClass.Cid,

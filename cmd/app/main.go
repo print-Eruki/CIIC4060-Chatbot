@@ -18,8 +18,10 @@ func main() {
 	//cleans incoming request urls, /entity/ -> /entity
 	router.RemoveExtraSlash = true
 
+	// setup the routes for every entity
 	mapClassRoutes(db, router)
 	mapMeetingRoutes(db, router)
+	mapRoomRoutes(db, router)
 
 	router.Run("localhost:8080")
 }
@@ -45,6 +47,17 @@ func mapMeetingRoutes(db *sql.DB, router *gin.Engine) {
 	router.POST("/datastic_4/meeting", meetingHandler.CreateMeeting)
 	router.PUT("/datastic_4/meeting/:id", meetingHandler.UpdateMeeting)
 	router.DELETE("datastic_4/meeting/:id", meetingHandler.DeleteMeeting)
+}
+
+func mapRoomRoutes(db *sql.DB, router *gin.Engine) {
+	roomDAO := dao.NewRoomDAO(db)
+	roomHandler := handler.NewRoomHandler(roomDAO)
+
+	router.GET("/datastic_4/room", roomHandler.GetRooms)
+	router.GET("/datastic_4/room/:id", roomHandler.GetRoomByID)
+	router.POST("/datastic_4/room", roomHandler.CreateRoom)
+	router.PUT("/datastic_4/room/:id", roomHandler.UpdateRoom)
+	router.DELETE("datastic_4/room/:id", roomHandler.DeleteRoom)
 }
 
 // Establishes a connection to a postgres database
