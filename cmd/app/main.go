@@ -24,6 +24,7 @@ func main() {
 	mapRoomRoutes(db, router)
 	mapSectionRoutes(db, router)
 	mapUserRoutes(db, router)
+	mapRequisiteRoutes(db, router)
 
 	router.Run("localhost:8080")
 }
@@ -79,6 +80,17 @@ func mapUserRoutes(db *sql.DB, router *gin.Engine) {
 
 	router.POST("/datastic_4/signup", userHandler.CreateUser)
 	router.POST("datastic_4/login", userHandler.ValidateUser)
+}
+
+func mapRequisiteRoutes(db *sql.DB, router *gin.Engine) {
+	requisiteDAO := dao.NewRequisiteDAO(db)
+	requisiteHandler := handler.NewRequisiteHandler(requisiteDAO)
+
+	router.GET("/datastic_4/requisite", requisiteHandler.GetRequisites)
+	router.GET("datastic_4/requisite/:classid/:reqid", requisiteHandler.GetRequisiteByID)
+	router.POST("/datastic_4/requisite", requisiteHandler.CreateRequisite)
+	router.PUT("datastic_4/requisite/:classid/:reqid", requisiteHandler.UpdateRequisite)
+	router.DELETE("datastic_4/requisite/:classid/:reqid", requisiteHandler.DeleteRequisite)
 }
 
 // Establishes a connection to a postgres database
