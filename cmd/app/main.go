@@ -23,6 +23,7 @@ func main() {
 	mapMeetingRoutes(db, router)
 	mapRoomRoutes(db, router)
 	mapSectionRoutes(db, router)
+	mapUserRoutes(db, router)
 
 	router.Run("localhost:8080")
 }
@@ -70,6 +71,14 @@ func mapSectionRoutes(db *sql.DB, router *gin.Engine) {
 	router.POST("/datastic_4/section", sectionHandler.CreateSection)
 	router.PUT("/datastic_4/section/:id", sectionHandler.UpdateSection)
 	router.DELETE("datastic_4/section/:id", sectionHandler.DeleteSection)
+}
+
+func mapUserRoutes(db *sql.DB, router *gin.Engine) {
+	userDAO := dao.NewUserDAO(db)
+	userHandler := handler.NewUserHandler(userDAO)
+
+	router.POST("/datastic_4/signup", userHandler.CreateUser)
+	router.POST("datastic_4/login", userHandler.ValidateUser)
 }
 
 // Establishes a connection to a postgres database
