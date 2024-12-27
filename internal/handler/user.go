@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"database/sql"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -21,6 +22,15 @@ func (h *UserHandler) CreateUser(c *gin.Context) {
 	var newUser model.User
 	if err := c.Bind(&newUser); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	db_user, err := h.DAO.GetUser(newUser.Username)
+	if err != nil && err != sql.ErrNoRows {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	if db_user.Username == newUser.Username {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "username already exist"})
 		return
 	}
 
