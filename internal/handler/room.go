@@ -19,7 +19,6 @@ func NewRoomHandler(dao *dao.RoomDAO) *RoomHandler {
 	return &RoomHandler{DAO: dao}
 }
 
-
 func (h *RoomHandler) GetRooms(c *gin.Context) {
 	rooms, err := h.DAO.GetRooms()
 	if err != nil {
@@ -63,7 +62,7 @@ func (h *RoomHandler) CreateRoom(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	
+
 	c.JSON(http.StatusCreated, gin.H{"Created room": newRoom})
 }
 
@@ -112,4 +111,3 @@ func (h *RoomHandler) DeleteRoom(c *gin.Context) {
 
 	c.JSON(http.StatusAccepted, gin.H{"Deleted room": deletedRoom})
 }
-
