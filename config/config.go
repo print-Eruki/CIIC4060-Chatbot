@@ -1,6 +1,8 @@
 package config
 
 import (
+	"database/sql"
+	"fmt"
 	"log"
 
 	"github.com/caarlos0/env/v6"
@@ -17,7 +19,7 @@ type Config struct {
 }
 
 // Loads the env and returns a db configuration
-func LoadConfig() (*Config, error) {
+func loadConfig() (*Config, error) {
 	//load env variables
 	if err := godotenv.Load(".env"); err != nil {
 		log.Fatalf("Error loading .env: %s", err)
@@ -31,4 +33,23 @@ func LoadConfig() (*Config, error) {
 	}
 
 	return cfg, nil
+}
+
+// Establishes a connection to a postgres database
+func SetupConnection() *sql.DB {
+	cfg, err := loadConfig()
+	if err != nil {
+		log.Fatalf("Db config didn't load, Error: %s", err)
+	}
+
+	dsn := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable",
+		cfg.User, cfg.Password, cfg.Host, cfg.Port, cfg.DbName)
+
+	db, err := sql.Open("postgres", dsn)
+
+	if err != nil {
+		log.Fatalf("Database connection failed, details: %s", err)
+	}
+
+	return db
 }
